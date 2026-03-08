@@ -171,7 +171,7 @@ remix is internal and local.
 
 ### vouch
 
-publicly endorse a vetted cap by liking it.
+publicly endorse a vetted cap.
 
 ```bash
 vit vouch <cap-ref>

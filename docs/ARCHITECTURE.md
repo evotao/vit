@@ -7,7 +7,7 @@ vit uses ATProto records stored in each user's PDS repository. three record type
 | record type | NSID | custom? | key | purpose |
 |---|---|---|---|---|
 | cap | `org.v-it.cap` | yes | `tid` | structured change description |
-| like | `app.bsky.feed.like` | no (reused) | `tid` | endorse a cap |
+| vouch | `org.v-it.vouch` | yes | `tid` | endorse a cap |
 | follow | `app.bsky.graph.follow` | no (reused) | `tid` | subscribe to a handle |
 
 ### why caps use a custom NSID
@@ -19,13 +19,12 @@ caps are structurally similar to Bluesky posts (`app.bsky.feed.post`) but serve 
 - vit tooling can query caps independently without filtering out posts.
 - the cap schema can evolve independently of `app.bsky.feed.post`.
 
-### why likes and follows are reused
+### why follows are reused
 
-`app.bsky.feed.like` and `app.bsky.graph.follow` are generic enough to use as-is:
+`app.bsky.graph.follow` is generic enough to use as-is:
 
-- a like's `subject` is a `strongRef` (URI + CID) — it works for any record, including caps.
 - a follow's `subject` is a DID — it works regardless of what record types the followed account publishes.
-- reusing official lexicons means likes and follows are visible in Bluesky clients, which is acceptable and useful for cross-network discoverability.
+- reusing the official follow lexicon means follows are visible in Bluesky clients, which is useful for cross-network discoverability.
 
 ## cap lexicon
 
@@ -62,13 +61,13 @@ lexicon JSON files follow the NSID-to-path convention:
 lexicons/
   org/
     v-it/
-      cap.json          # org.v-it.cap
+      cap.json            # org.v-it.cap
+      vouch.json          # org.v-it.vouch
 ```
 
 this mirrors the convention used in the ATProto repository.
 
 ## future work
 
-- custom lexicons for vouch (`org.v-it.vouch`) and other vit interaction record types.
 - provenance tracking across vet, remix, vouch, and ship lineage.
 - runtime lexicon validation (currently `validate: false` in CLI write commands).

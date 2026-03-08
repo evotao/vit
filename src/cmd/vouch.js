@@ -2,7 +2,8 @@
 // Copyright (c) 2026 sol pbc
 
 import { requireDid } from '../lib/config.js';
-import { CAP_COLLECTION } from '../lib/constants.js';
+import { CAP_COLLECTION, VOUCH_COLLECTION } from '../lib/constants.js';
+import { TID } from '@atproto/common-web';
 import { restoreAgent } from '../lib/oauth.js';
 import { appendLog, readProjectConfig, readFollowing, readLog } from '../lib/vit-dir.js';
 import { resolveRef, REF_PATTERN } from '../lib/cap-ref.js';
@@ -90,19 +91,24 @@ export default function register(program) {
         }
 
         const now = new Date().toISOString();
-        const likeRecord = {
-          $type: 'app.bsky.feed.like',
+        const vouchRecord = {
+          $type: VOUCH_COLLECTION,
           subject: {
             uri: match.uri,
             cid: match.cid,
           },
           createdAt: now,
+          ref,
+          beacon,
         };
-        if (verbose) console.log(`[verbose] creating like for ${match.uri}`);
-        const res = await agent.com.atproto.repo.createRecord({
+        if (verbose) console.log(`[verbose] creating vouch for ${match.uri}`);
+        const rkey = TID.nextStr();
+        const res = await agent.com.atproto.repo.putRecord({
           repo: did,
-          collection: 'app.bsky.feed.like',
-          record: likeRecord,
+          collection: VOUCH_COLLECTION,
+          rkey,
+          record: vouchRecord,
+          validate: false,
         });
 
         try {
@@ -110,7 +116,8 @@ export default function register(program) {
             ref,
             uri: match.uri,
             cid: match.cid,
-            likeUri: res.data.uri,
+            vouchUri: res.data.uri,
+            beacon,
             ts: now,
           });
         } catch (logErr) {

@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "org.v-it.vouch",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Record endorsing a vit cap.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "createdAt", "ref", "beacon"],
+        "properties": {
+          "subject": {
+            "type": "ref",
+            "ref": "lex:com.atproto.repo.strongRef",
+            "description": "The cap being endorsed."
+          },
+          "ref": {
+            "type": "string",
+            "maxLength": 128,
+            "maxGraphemes": 64,
+            "description": "Three lowercase words separated by dashes, e.g. fast-cache-invalidation"
+          },
+          "beacon": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Beacon URI scoping this vouch to a project."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Client-declared timestamp when this vouch was created."
+          }
+        }
+      }
+    }
+  }
+}
