@@ -4,6 +4,7 @@
 import { requireDid } from '../lib/config.js';
 import { restoreAgent } from '../lib/oauth.js';
 import { readFollowing, writeFollowing } from '../lib/vit-dir.js';
+import { mark } from '../lib/brand.js';
 
 export default function register(program) {
   program
@@ -37,7 +38,7 @@ export default function register(program) {
 
         list.push({ handle, did: targetDid, followedAt: new Date().toISOString() });
         writeFollowing(list);
-        console.log(`following ${handle} (${targetDid})`);
+        console.log(`${mark} following ${handle} (${targetDid})`);
       } catch (err) {
         console.error(err instanceof Error ? err.message : String(err));
         process.exitCode = 1;
@@ -64,7 +65,7 @@ export default function register(program) {
 
         writeFollowing(filtered);
         if (verbose) console.log(`[verbose] removed ${handle} from following list`);
-        console.log(`unfollowed ${handle}`);
+        console.log(`${mark} unfollowed ${handle}`);
       } catch (err) {
         console.error(err instanceof Error ? err.message : String(err));
         process.exitCode = 1;

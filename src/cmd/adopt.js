@@ -7,6 +7,7 @@ import { execFileSync } from 'node:child_process';
 import { parseGitUrl, toBeacon, beaconToHttps } from '../lib/beacon.js';
 import { requireNotAgent } from '../lib/agent.js';
 import { which } from '../lib/compat.js';
+import { mark, brand } from '../lib/brand.js';
 
 export default function register(program) {
   program
@@ -19,7 +20,7 @@ export default function register(program) {
       try {
         const gate = requireNotAgent();
         if (!gate.ok) {
-          console.error('vit adopt must be run by a human. run it in your own terminal.');
+          console.error(`${brand} adopt must be run by a human. run it in your own terminal.`);
           process.exitCode = 1;
           return;
         }
@@ -78,11 +79,11 @@ export default function register(program) {
         }
 
         // success output
-        console.log(`beacon: ${beaconUri}`);
-        console.log(`directory: ${dirName}`);
+        console.log(`${mark} beacon: ${beaconUri}`);
+        console.log(`${mark} directory: ${dirName}`);
         console.log(`run: cd ${dirName}`);
         console.log('');
-        console.log("next: start your agent and ask it to run 'vit init'");
+        console.log(`next: start your agent and ask it to run '${brand} init'`);
       } catch (err) {
         console.error(err instanceof Error ? err.message : String(err));
         process.exitCode = 1;

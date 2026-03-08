@@ -1,4 +1,7 @@
-# vit manifesto
+[![v̇it](https://v-it.org/badge/vit-enabled.svg)](https://v-it.org)
+[![open source is social](https://v-it.org/badge/social-open-source.svg)](https://v-it.org)
+
+# v̇it manifesto
 
 vit is a **social system for personalized software** where the unit of exchange is not pull requests, not screenshots, not diffs, not even git.
 

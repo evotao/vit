@@ -23,7 +23,7 @@ describe('vit init', () => {
   test('writes beacon from HTTPS URL', () => {
     const result = run('init --beacon https://github.com/solpbc/vit.git', tmpDir, { CLAUDECODE: '1' });
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toBe('beacon: vit:github.com/solpbc/vit');
+    expect(result.stdout).toContain('beacon: vit:github.com/solpbc/vit');
 
     const content = readFileSync(join(tmpDir, '.vit', 'config.json'), 'utf-8');
     expect(JSON.parse(content).beacon).toBe('vit:github.com/solpbc/vit');
@@ -32,7 +32,7 @@ describe('vit init', () => {
   test('writes beacon from SSH URL', () => {
     const result = run('init --beacon git@github.com:solpbc/vit.git', tmpDir, { CLAUDECODE: '1' });
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toBe('beacon: vit:github.com/solpbc/vit');
+    expect(result.stdout).toContain('beacon: vit:github.com/solpbc/vit');
 
     const content = readFileSync(join(tmpDir, '.vit', 'config.json'), 'utf-8');
     expect(JSON.parse(content).beacon).toBe('vit:github.com/solpbc/vit');
@@ -42,6 +42,13 @@ describe('vit init', () => {
     expect(existsSync(join(tmpDir, '.vit'))).toBe(false);
     run('init --beacon https://github.com/solpbc/vit.git', tmpDir, { CLAUDECODE: '1' });
     expect(existsSync(join(tmpDir, '.vit'))).toBe(true);
+  });
+
+  test('generates .vit/README.md on init', () => {
+    run('init --beacon https://github.com/solpbc/vit.git', tmpDir, { CLAUDECODE: '1' });
+    const readme = readFileSync(join(tmpDir, '.vit', 'README.md'), 'utf-8');
+    expect(readme).toContain('social open source network');
+    expect(readme).toContain('v-it.org');
   });
 
   test('overwrites existing beacon silently', () => {
@@ -59,7 +66,7 @@ describe('vit init', () => {
 
     const result = run('init --beacon .', tmpDir, { CLAUDECODE: '1' });
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toBe('beacon: vit:github.com/solpbc/vit');
+    expect(result.stdout).toContain('beacon: vit:github.com/solpbc/vit');
   });
 
   test('errors when --beacon . has no git remote', () => {
@@ -150,7 +157,7 @@ describe('vit init', () => {
 
     const result = run('init --beacon .', tmpDir, { CLAUDECODE: '1' });
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toBe('beacon: vit:github.com/solpbc/vit');
+    expect(result.stdout).toContain('beacon: vit:github.com/solpbc/vit');
   });
 
   test('shows guidance for already initialized repo', () => {
