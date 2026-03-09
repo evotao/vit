@@ -6,19 +6,6 @@ import { streamEvents } from './jetstream.js';
 
 export { CursorStore } from './cursor.js';
 
-async function getCursor(env) {
-  const id = env.CURSOR_STORE.idFromName('cursor');
-  const stub = env.CURSOR_STORE.get(id);
-  const res = await stub.fetch('http://cursor/');
-  return (await res.text()) || null;
-}
-
-async function saveCursor(env, cursor) {
-  const id = env.CURSOR_STORE.idFromName('cursor');
-  const stub = env.CURSOR_STORE.get(id);
-  await stub.fetch('http://cursor/', { method: 'PUT', body: cursor });
-}
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -30,14 +17,8 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
-    let cursor = await getCursor(env);
-    // On first run, start 24h ago to catch everything in the Jetstream buffer
-    if (!cursor) {
-      cursor = String((Date.now() - 24 * 60 * 60 * 1000) * 1000);
-    }
-    const result = await streamEvents(env, cursor);
-    // Always advance cursor — use latest event time, or current time if no events
-    const nextCursor = result.latestCursor || String(Date.now() * 1000);
-    await saveCursor(env, nextCursor);
+    // Always live-tail (no cursor) — Jetstream doesn't replay custom lexicon
+    // commits via cursor. D1 UNIQUE constraints handle deduplication.
+    const result = await streamEvents(env, null);
   },
 };

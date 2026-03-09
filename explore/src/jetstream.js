@@ -6,7 +6,7 @@ import { resolveHandles } from './resolve.js';
 const CAP_COLLECTION = 'org.v-it.cap';
 const VOUCH_COLLECTION = 'org.v-it.vouch';
 const JETSTREAM_URL = 'wss://jetstream2.us-east.bsky.network/subscribe';
-const STREAM_DURATION_MS = 25_000;
+const STREAM_DURATION_MS = 55_000;
 
 function beaconValue(value) {
   return typeof value === 'string' && value.length > 0 ? value : null;
