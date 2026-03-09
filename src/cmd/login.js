@@ -25,6 +25,7 @@ export default function register(program) {
         const existing = loadConfig();
         if (existing.did) {
           try {
+            console.log('Checking session...');
             await restoreAgent(existing.did);
             console.log(`Already logged in as ${existing.did}`);
             return;
