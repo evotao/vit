@@ -9,7 +9,7 @@ directory = "public"
 [[d1_databases]]
 binding = "DB"
 database_name = "vit-explore"
-database_id = "placeholder"
+database_id = "6906f86e-4ecb-452a-b694-ca1cb87e264c"
 
 [durable_objects]
 bindings = [
@@ -18,7 +18,7 @@ bindings = [
 
 [[migrations]]
 tag = "v1"
-new_classes = ["CursorStore"]
+new_sqlite_classes = ["CursorStore"]
 
 [triggers]
 crons = ["*/1 * * * *"]
