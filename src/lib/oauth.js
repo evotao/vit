@@ -65,9 +65,13 @@ export function checkSession(did) {
   try {
     const raw = readFileSync(configPath('session.json'), 'utf-8');
     const data = JSON.parse(raw);
-    const expiresAt = data[did]?.tokenSet?.expires_at;
-    if (!expiresAt) return null;
-    return new Date(expiresAt) > new Date() ? did : null;
+    const tokenSet = data[did]?.tokenSet;
+    if (!tokenSet) return null;
+    // Session is valid if access token is fresh OR a refresh token exists
+    // (the library will auto-refresh expired access tokens on restore)
+    const accessValid = tokenSet.expires_at && new Date(tokenSet.expires_at) > new Date();
+    if (accessValid || tokenSet.refresh_token) return did;
+    return null;
   } catch {
     return null;
   }
