@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>vit explore</title>
+  <title>explore — vit</title>
   <meta name="description" content="vit network explorer — live capability and vouch activity">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='5.5' r='3' fill='%2306D6A0'/%3E%3Cpath d='M5.5 10 L16 26 L26.5 10' stroke='%2306D6A0' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
     :root {
       color-scheme: light;
+      --vit-green: #06D6A0;
+      --vit-green-deep: #059669;
     }
 
     body {
@@ -26,30 +28,39 @@
       padding: 24px 20px 32px;
     }
 
+    header {
+      border-bottom: 2px solid var(--vit-green);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
     header h1 {
       margin: 0;
-      font-size: 2rem;
-      line-height: 1.2;
-      cursor: default;
+      line-height: 1;
+    }
+
+    header h1 a {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    header h1 svg {
+      display: block;
+      height: 28px;
+      width: auto;
     }
 
     .tagline {
       margin: 6px 0 0;
       color: #4b5563;
       font-size: 1rem;
-    }
-
-    .header-bar {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    header {
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 16px;
-      margin-bottom: 24px;
     }
 
     nav {
@@ -59,7 +70,7 @@
     }
 
     nav a {
-      color: #059669;
+      color: var(--vit-green-deep);
       text-decoration: none;
     }
 
@@ -68,13 +79,54 @@
     }
 
     nav a.active {
-      color: #06D6A0;
+      color: var(--vit-green-deep);
       text-decoration: underline;
+      text-decoration-color: var(--vit-green);
       text-underline-offset: 3px;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--vit-green-deep);
+      padding: 0;
+      line-height: 1;
+    }
+
+    a {
+      color: var(--vit-green-deep);
     }
 
     main {
       min-height: 240px;
+    }
+
+    .sub-nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .sub-nav a {
+      color: var(--vit-green-deep);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .sub-nav a:hover {
+      text-decoration: underline;
+    }
+
+    .sub-nav a.active {
+      text-decoration: underline;
+      text-decoration-color: var(--vit-green);
+      text-underline-offset: 3px;
     }
 
     main h1,
@@ -121,7 +173,7 @@
 
     hr {
       border: 0;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid var(--vit-green);
       margin: 1.5em 0;
     }
 
@@ -134,7 +186,7 @@
     }
 
     footer a {
-      color: #059669;
+      color: var(--vit-green-deep);
     }
 
     .cap-item {
@@ -157,7 +209,7 @@
     }
 
     .cap-meta a {
-      color: #059669;
+      color: var(--vit-green-deep);
       text-decoration: none;
     }
 
@@ -178,7 +230,7 @@
     }
 
     .beacon-name a {
-      color: #06D6A0;
+      color: var(--vit-green);
       text-decoration: none;
       font-weight: 600;
     }
@@ -203,14 +255,14 @@
       background: #f3f4f6;
       padding: 16px;
       border-radius: 6px;
-      border-left: 3px solid #06D6A0;
+      border-left: 3px solid var(--vit-green);
     }
 
     .stat-number {
       font-size: 2rem;
       font-weight: 700;
       line-height: 1.2;
-      color: #06D6A0;
+      color: var(--vit-green);
     }
 
     .stat-label {
@@ -232,7 +284,7 @@
       background: #f3f4f6;
       border: 1px solid #e5e7eb;
       border-radius: 6px;
-      color: #059669;
+      color: var(--vit-green-deep);
       cursor: pointer;
       font-size: 0.9rem;
       font-family: inherit;
@@ -249,7 +301,27 @@
       font-weight: 600;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
+      .nav-toggle {
+        display: block;
+      }
+
+      .header-bar {
+        flex-wrap: wrap;
+      }
+
+      nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+        padding-top: 12px;
+      }
+
+      nav.open {
+        display: flex;
+      }
+
       .stat-grid {
         grid-template-columns: 1fr;
       }
@@ -269,28 +341,53 @@
   <div class="container">
     <header>
       <div class="header-bar">
-        <div>
-          <h1><a href="https://v-it.org" style="color: #06D6A0; text-decoration: none;">vit explore</a></h1>
-          <p class="tagline">network explorer</p>
-        </div>
+        <h1><a href="https://v-it.org" aria-label="vit">
+        <svg viewBox="0 0 56 34" xmlns="http://www.w3.org/2000/svg" height="28" aria-hidden="true">
+          <circle cx="16" cy="6" r="3" fill="#06D6A0"/>
+          <path d="M5.5 11 L16 27 L26.5 11" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="33.5" cy="6" r="3" fill="#06D6A0"/>
+          <line x1="33.5" y1="12.5" x2="33.5" y2="27" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="45" y1="7" x2="45" y2="27" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="39" y1="12.5" x2="51" y2="12.5" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+        </a></h1>
+        <button class="nav-toggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
         <nav>
-          <a href="#">caps</a>
-          <a href="#beacons">beacons</a>
-          <a href="#stats">stats</a>
+          <a href="https://v-it.org/">home</a>
+          <a href="https://v-it.org/start/">start</a>
+          <a href="/" class="active">explore</a>
+          <a href="https://v-it.org/doctrine/">doctrine</a>
+          <a href="https://v-it.org/vocab/">vocab</a>
+          <a href="https://v-it.org/architecture/">architecture</a>
+          <a href="https://github.com/solpbc/vit">github</a>
         </nav>
       </div>
+      <p class="tagline">open source is social</p>
     </header>
 
     <main id="content">
+      <nav class="sub-nav">
+        <a href="#">caps</a>
+        <a href="#beacons">beacons</a>
+        <a href="#stats">stats</a>
+      </nav>
       <div id="view"></div>
     </main>
 
     <footer>
-      part of <a href="https://solpbc.org">sol pbc</a> · <a href="https://v-it.org">v-it.org</a>
+      part of <a href="https://solpbc.org">sol pbc</a>. created by <a href="https://bsky.app/profile/jeremie.com">Jeremie Miller</a>. vit is a trademark of sol pbc.
     </footer>
   </div>
 
   <script>
+    // Mobile nav toggle
+    document.querySelector('.nav-toggle').addEventListener('click', function() {
+      var nav = this.parentNode.querySelector('nav');
+      var open = nav.classList.toggle('open');
+      this.setAttribute('aria-expanded', open);
+      this.textContent = open ? '\u2715' : '\u2630';
+    });
+
     let capsCursor = null;
     let capsContainer = null;
     let currentBeaconFilter = null;
@@ -337,7 +434,7 @@
 
     function updateNav() {
       const route = getRoute();
-      document.querySelectorAll('nav a').forEach(function(a) {
+      document.querySelectorAll('.sub-nav a').forEach(function(a) {
         const href = a.getAttribute('href');
         if (route.view === 'caps') a.classList.toggle('active', href === '#');
         else if (route.view === 'beacons' || route.view === 'beacon') a.classList.toggle('active', href === '#beacons');
