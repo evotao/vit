@@ -1,6 +1,6 @@
 contributing to vit happens through vit itself.
 you do not route work through pull requests or issues; you ship caps.
-for the philosophy behind this system, read [docs/DOCTRINE.md](docs/DOCTRINE.md).
+for the philosophy behind this system, read the [doctrine](https://v-it.org/doctrine/).
 
 ## prerequisites
 
@@ -79,7 +79,7 @@ when shipping a derivative of a remixed cap, add `--recap <original-ref>` to kee
 - a descriptive `ref` (three lowercase words, dash-separated)
 - one recognized kind: `feat`, `fix`, `test`, `docs`, `perf`, `sec`, `refactor`, or `chore`
 - self-contained instructions so a human or agent can implement it
-- full cap structure aligned to [docs/VOCAB.md](docs/VOCAB.md)
+- full cap structure aligned to [VOCAB.md](VOCAB.md)
 
 ## local development
 

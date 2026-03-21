@@ -268,11 +268,9 @@
         <nav>
           <a href="/" class="active">home</a>
           <a href="/start/">start</a>
-          <a href="https://explore.v-it.org">explore</a>
           <a href="/doctrine/">doctrine</a>
-          <a href="/vocab/">vocab</a>
-          <a href="/architecture/">architecture</a>
-          <a href="https://github.com/solpbc/vit">github</a>
+          <a href="https://explore.v-it.org">explore</a>
+          <a href="https://github.com/solpbc/vit">source</a>
         </nav>
       </div>
 
@@ -302,15 +300,6 @@
       part of <a href="https://solpbc.org">sol pbc</a>. created by <a href="https://bsky.app/profile/jeremie.com">Jeremie Miller</a>. vit is a trademark of sol pbc.
     </footer>
   </div>
-
-  <script>
-    // Redirect old hash URLs to path URLs
-    (function() {
-      var hash = location.hash.slice(1);
-      var map = { 'get-started': '/start/', doctrine: '/doctrine/', vocab: '/vocab/', architecture: '/architecture/' };
-      if (map[hash]) location.replace(map[hash]);
-    })();
-  </script>
 
   <script>
     // Mobile nav toggle

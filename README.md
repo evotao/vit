@@ -23,6 +23,11 @@ vit is how software becomes *organic* and *yours*.
 
 **[read the doctrine](https://v-it.org/doctrine/)** · **[get started](https://v-it.org/start/)** · **[explore the network](https://explore.v-it.org)**
 
+## reference
+
+- **[vocabulary](VOCAB.md)** — core terminology: beacons, caps, remixes, provenance, and the verbs that drive the workflow
+- **[architecture](ARCHITECTURE.md)** — technical design: ATProto record types, cap lexicons, and system internals
+
 ## install
 
 ```bash
