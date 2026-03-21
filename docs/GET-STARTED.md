@@ -2,6 +2,16 @@
 
 vit turns open source into a social network of capabilities. here's how to join — it takes about 60 seconds.
 
+<img src="/vit-social-loop.svg" alt="The vit social loop: skim, vet, remix, vouch, ship" style="max-width:100%;height:auto;display:block;margin:1em 0">
+
+every verb has a purpose:
+
+- **skim** — browse the capability stream
+- **vet** — run sandboxed local evaluation
+- **remix** — integrate a cap into your codebase
+- **vouch** — stake your reputation on a cap
+- **ship** — publish a capability back to the network
+
 ---
 
 ## explore first
