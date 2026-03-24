@@ -46,6 +46,14 @@
     .green { color: var(--green); }
     .green-light { color: var(--green-light); }
     .dim { color: var(--text-dim); }
+
+    /* persistent brand mark — bottom left of slides 2-6 */
+    .brand-mark {
+      position: absolute;
+      bottom: 32px;
+      left: 48px;
+      opacity: 0.12;
+    }
   </style>
 </head>
 <body>
@@ -76,24 +84,40 @@
           </div>
           <div style="width:120px; height:2px; background:var(--text-dim); opacity:0.4;"></div>
           <div style="text-align:center;">
-            <p style="font-size:96px; margin:0; font-weight:700;">2024</p>
-            <p class="dim" style="font-size:48px; margin:16px 0 0 0;">cathedral</p>
+            <p style="font-size:96px; margin:0; font-weight:700;">2026</p>
+            <p class="dim" style="font-size:48px; margin:16px 0 0 0;">stadium</p>
           </div>
         </div>
-        <p class="dim" style="font-size:32px; margin:0;">85% of projects. &lt;5% of devs producing 95% of code.</p>
+        <p style="font-size:36px; margin:0;">one maintainer performing for millions of users.</p>
+        <p class="dim" style="font-size:32px; margin:16px 0 0 0;">the performers are burning out.</p>
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="brand-mark" width="40">
+          <circle cx="16" cy="5.5" r="3" fill="#06D6A0"/>
+          <path d="M5.5 10 L16 26 L26.5 10" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
       </section>
 
-      <!-- slide 3: agents break the cathedral -->
+      <!-- slide 3: agents are the unlock -->
       <section>
-        <p style="font-size:56px; max-width:70%; text-align:center; line-height:1.5; margin:0 auto;">
-          agents generate <span class="green">more code in a day</span> than most projects see in a month.
+        <p style="font-size:52px; max-width:75%; text-align:center; line-height:1.5; margin:0 auto 20px auto;">
+          coding agents don't break open source.
         </p>
+        <p class="green" style="font-size:56px; max-width:75%; text-align:center; line-height:1.5; margin:0 auto; font-weight:500;">
+          they break the gatekeeping model.
+        </p>
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="brand-mark" width="40">
+          <circle cx="16" cy="5.5" r="3" fill="#06D6A0"/>
+          <path d="M5.5 10 L16 26 L26.5 10" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
       </section>
 
-      <!-- slide 4: what the bazaar actually looks like -->
+      <!-- slide 4: open source is social -->
       <section>
-        <p class="dim" style="font-size:28px; margin:0 0 40px 0;">vit on AT Protocol</p>
-        <div style="display:flex; align-items:center; justify-content:center; gap:24px;">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="120" style="margin-bottom:24px;">
+          <circle cx="16" cy="5.5" r="3" fill="#06D6A0"/>
+          <path d="M5.5 10 L16 26 L26.5 10" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <p class="green" style="font-size:56px; margin:0 0 48px 0; font-weight:600;">open source is social.</p>
+        <div style="display:flex; align-items:center; justify-content:center; gap:24px; margin-bottom:40px;">
           <span class="green" style="font-size:44px; font-weight:500;">skim</span>
           <span class="dim" style="font-size:36px;">→</span>
           <span class="green" style="font-size:44px; font-weight:500;">vet</span>
@@ -104,17 +128,18 @@
           <span class="dim" style="font-size:36px;">→</span>
           <span class="green" style="font-size:44px; font-weight:500;">ship</span>
         </div>
+        <p class="dim" style="font-size:28px; margin:0;">a social capability network on AT Protocol</p>
       </section>
 
       <!-- slide 5: the five principles -->
       <section>
         <div style="position:relative; text-align:left; padding-left:12%; padding-right:12%;">
           <div style="display:flex; flex-direction:column; gap:20px;">
-            <div><span class="green" style="font-size:44px; font-weight:500;">private.</span> <span class="dim" style="font-size:30px;">your data, your graph, your vouches. no platform owns it.</span></div>
-            <div><span class="green" style="font-size:44px; font-weight:500;">dedicated.</span> <span class="dim" style="font-size:30px;">works for developers, not advertisers. zero tracking.</span></div>
-            <div><span class="green" style="font-size:44px; font-weight:500;">plural.</span> <span class="dim" style="font-size:30px;">AT Protocol — no single entity controls the network.</span></div>
+            <div><span class="green" style="font-size:44px; font-weight:500;">private.</span> <span class="dim" style="font-size:30px;">your social graph, your data, your vouches. you own them.</span></div>
+            <div><span class="green" style="font-size:44px; font-weight:500;">dedicated.</span> <span class="dim" style="font-size:30px;">works for you, not an algorithm. no engagement optimization.</span></div>
+            <div><span class="green" style="font-size:44px; font-weight:500;">plural.</span> <span class="dim" style="font-size:30px;">AT Protocol — anyone can run their own infrastructure.</span></div>
             <div><span class="green" style="font-size:44px; font-weight:500;">adaptable.</span> <span class="dim" style="font-size:30px;">caps are remixable. agents are first-class participants.</span></div>
-            <div><span class="green" style="font-size:44px; font-weight:500;">prosocial.</span> <span class="dim" style="font-size:30px;">quality through social trust. the network rewards honesty.</span></div>
+            <div><span class="green" style="font-size:44px; font-weight:500;">prosocial.</span> <span class="dim" style="font-size:30px;">quality through vouching. reputation that compounds.</span></div>
           </div>
           <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="position:absolute; right:-2%; top:50%; transform:translateY(-50%); width:280px; opacity:0.06;">
             <circle cx="16" cy="5.5" r="3" fill="#06D6A0"/>
@@ -123,11 +148,17 @@
         </div>
       </section>
 
-      <!-- slide 6: why this is structural -->
+      <!-- slide 6: the enshittification killswitch -->
       <section>
-        <p style="font-size:60px; margin:0 0 16px 0;">this isn't a promise.</p>
-        <p class="green" style="font-size:64px; margin:0; font-weight:600;">it's a structure.</p>
-        <p class="dim" style="font-size:28px; margin:48px 0 0 0;">sol pbc — irrevocable covenants in the articles of incorporation</p>
+        <p style="font-size:48px; margin:0 0 16px 0;">built on the</p>
+        <p class="green" style="font-size:60px; margin:0 0 48px 0; font-weight:600;">enshittification killswitch.</p>
+        <p class="dim" style="font-size:32px; margin:0; max-width:70%; text-align:center; line-height:1.6;">
+          your identity. your data. your connections.<br>portable and self-sovereign.
+        </p>
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="brand-mark" width="40">
+          <circle cx="16" cy="5.5" r="3" fill="#06D6A0"/>
+          <path d="M5.5 10 L16 26 L26.5 10" stroke="#06D6A0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
       </section>
 
       <!-- slide 7: try it / close -->
@@ -139,7 +170,6 @@
         <div class="mono" style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:36px;">
           <span class="green" style="font-size:40px;">npx vit login</span>
           <span class="green" style="font-size:40px;">vit init</span>
-          <span class="green" style="font-size:40px;">vit skim</span>
         </div>
         <p style="font-size:40px; margin:0 0 16px 0;">open source is social. join the bazaar.</p>
         <p class="dim" style="font-size:32px; margin:0;">v-it.org</p>
