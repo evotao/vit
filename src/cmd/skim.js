@@ -45,18 +45,31 @@ export default function register(program) {
         const { agent } = await restoreAgent(did);
         if (verbose) console.log('[verbose] session restored');
 
-        // build list of DIDs to query
+        // build list of DIDs to query and DID→handle map
+        const handleMap = new Map();
         let dids;
         if (opts.handle) {
           const handle = opts.handle.replace(/^@/, '');
           const resolved = await agent.resolveHandle({ handle });
           dids = [resolved.data.did];
+          handleMap.set(resolved.data.did, handle);
           if (verbose) console.log(`[verbose] resolved ${handle} to ${resolved.data.did}`);
         } else {
           const following = readFollowing();
+          for (const e of following) handleMap.set(e.did, e.handle);
           dids = following.map(e => e.did);
           dids.push(did);
           if (verbose) console.log(`[verbose] querying ${dids.length} accounts (${dids.length - 1} follows + self)`);
+        }
+
+        // resolve own handle if not already known
+        if (!handleMap.has(did)) {
+          try {
+            const desc = await agent.com.atproto.repo.describeRepo({ repo: did });
+            handleMap.set(did, desc.data.handle);
+          } catch {
+            if (verbose) console.log(`[verbose] could not resolve handle for ${did}`);
+          }
         }
 
         // fetch caps from each DID
@@ -70,6 +83,7 @@ export default function register(program) {
             });
             const caps = res.data.records.filter(r => r.value.beacon === beacon);
             if (verbose) console.log(`[verbose] ${repoDid}: ${res.data.records.length} caps, ${caps.length} matching beacon`);
+            for (const cap of caps) cap._handle = handleMap.get(repoDid) || repoDid;
             allCaps.push(...caps);
           } catch (err) {
             if (verbose) console.log(`[verbose] ${repoDid}: error fetching caps: ${err.message}`);
@@ -98,6 +112,7 @@ export default function register(program) {
             const title = rec.value.title || '';
             const description = rec.value.description || '';
             console.log(`ref: ${ref}`);
+            console.log(`by: @${rec._handle}`);
             if (title) console.log(`title: ${title}`);
             if (description) console.log(`description: ${description}`);
             console.log();
