@@ -7,7 +7,7 @@ import { CAP_COLLECTION } from '../lib/constants.js';
 import { requireAgent } from '../lib/agent.js';
 import { requireDid } from '../lib/config.js';
 import { restoreAgent } from '../lib/oauth.js';
-import { appendLog, readProjectConfig, readLog, readFollowing } from '../lib/vit-dir.js';
+import { appendLog, readProjectConfig, readBeacons, readLog, readFollowing } from '../lib/vit-dir.js';
 import { REF_PATTERN, resolveRef } from '../lib/cap-ref.js';
 import { name } from '../lib/brand.js';
 import { resolvePds, listRecordsFromPds } from '../lib/pds.js';
@@ -21,6 +21,7 @@ export default function register(program) {
     .requiredOption('--title <title>', 'Short title for the cap')
     .requiredOption('--description <description>', 'Description of the cap')
     .requiredOption('--ref <ref>', 'Three lowercase words with dashes (e.g. fast-cache-invalidation)')
+    .option('--beacon <beacon>', 'Beacon to publish against (defaults to primary project beacon)')
     .option('--recap <ref>', 'Ref of the cap this derives from (quote-post semantics)')
     .action(async (opts) => {
       try {
@@ -41,13 +42,20 @@ export default function register(program) {
         if (verbose) console.log(`[verbose] DID: ${did}`);
 
         // preflight: beacon
-        const projectConfig = readProjectConfig();
-        if (!projectConfig.beacon) {
+        const allBeacons = readBeacons();
+        if (allBeacons.length === 0) {
           console.error(`no beacon set. run '${name} init' in a project directory first.`);
           process.exitCode = 1;
           return;
         }
-        if (verbose) console.log(`[verbose] beacon: ${projectConfig.beacon}`);
+        if (opts.beacon && !allBeacons.includes(opts.beacon)) {
+          console.error(`beacon '${opts.beacon}' is not configured in this project.`);
+          console.error(`configured beacons: ${allBeacons.join(', ')}`);
+          process.exitCode = 1;
+          return;
+        }
+        const projectConfig = readProjectConfig();
+        if (verbose) console.log(`[verbose] beacon: ${opts.beacon || projectConfig.beacon}`);
 
         let text;
         try {
@@ -67,7 +75,7 @@ export default function register(program) {
           return;
         }
 
-        const beacon = projectConfig.beacon;
+        const beacon = opts.beacon || projectConfig.beacon;
 
         let recapUri = null;
         if (opts.recap) {

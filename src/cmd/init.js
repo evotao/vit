@@ -14,6 +14,8 @@ export default function register(program) {
     .command('init')
     .description('Initialize .vit directory and set project beacon. Use the most official upstream or well-known git URL so all contributors converge on the same beacon.')
     .option('--beacon <url>', 'Git URL (or "." to read from git remote upstream/origin) to derive the beacon URI')
+    .option('--add-beacon <url>', 'Add a collection beacon (e.g. a shared pattern library)')
+    .option('--remove-beacon <url>', 'Remove a collection beacon')
     .option('-v, --verbose', 'Show step-by-step details')
     .action(async (opts) => {
       try {
@@ -28,6 +30,39 @@ export default function register(program) {
         const { verbose } = opts;
         const dir = vitDir();
         if (verbose) console.log(`[verbose] .vit dir: ${dir}`);
+
+        if (opts.addBeacon) {
+          const config = readProjectConfig();
+          if (!config.beacon) {
+            console.error(`no primary beacon set. run '${name} init --beacon <url>' first.`);
+            process.exitCode = 1;
+            return;
+          }
+          const b = 'vit:' + toBeacon(opts.addBeacon);
+          if (!config.beacons) config.beacons = [];
+          if (config.beacons.includes(b)) {
+            console.log(`${mark} beacon already added: ${b}`);
+            return;
+          }
+          config.beacons.push(b);
+          writeProjectConfig(config);
+          console.log(`${mark} added collection beacon: ${b}`);
+          return;
+        }
+
+        if (opts.removeBeacon) {
+          const config = readProjectConfig();
+          const b = 'vit:' + toBeacon(opts.removeBeacon);
+          if (!config.beacons || !config.beacons.includes(b)) {
+            console.error(`beacon not found: ${b}`);
+            process.exitCode = 1;
+            return;
+          }
+          config.beacons = config.beacons.filter(x => x !== b);
+          writeProjectConfig(config);
+          console.log(`${mark} removed collection beacon: ${b}`);
+          return;
+        }
 
         if (!opts.beacon) {
           const config = readProjectConfig();
@@ -144,7 +179,12 @@ export default function register(program) {
 
         const beacon = 'vit:' + toBeacon(gitUrl);
         if (verbose) console.log(`[verbose] Computed beacon: ${beacon}`);
-        writeProjectConfig({ beacon });
+        const existing = readProjectConfig();
+        const newConfig = { beacon };
+        if (Array.isArray(existing.beacons) && existing.beacons.length > 0) {
+          newConfig.beacons = existing.beacons;
+        }
+        writeProjectConfig(newConfig);
         if (verbose) console.log(`[verbose] Wrote config.json`);
         const readmePath = join(vitDir(), 'README.md');
         if (!existsSync(readmePath)) {

@@ -5,7 +5,7 @@ import { requireDid } from '../lib/config.js';
 import { CAP_COLLECTION, VOUCH_COLLECTION } from '../lib/constants.js';
 import { TID } from '@atproto/common-web';
 import { restoreAgent } from '../lib/oauth.js';
-import { appendLog, readProjectConfig, readFollowing, readLog } from '../lib/vit-dir.js';
+import { appendLog, readBeacons, readFollowing, readLog } from '../lib/vit-dir.js';
 import { resolveRef, REF_PATTERN } from '../lib/cap-ref.js';
 import { mark, name } from '../lib/brand.js';
 
@@ -30,14 +30,13 @@ export default function register(program) {
         if (!did) return;
         if (verbose) console.log(`[verbose] DID: ${did}`);
 
-        const projectConfig = readProjectConfig();
-        const beacon = projectConfig.beacon;
-        if (!beacon) {
+        const beacons = readBeacons();
+        if (beacons.length === 0) {
           console.error(`no beacon set. run '${name} init' in a project directory first.`);
           process.exitCode = 1;
           return;
         }
-        if (verbose) console.log(`[verbose] beacon: ${beacon}`);
+        if (verbose) console.log(`[verbose] beacons: ${beacons.join(', ')}`);
 
         const trusted = readLog('trusted.jsonl');
         const trustedEntry = trusted.find(e => e.ref === ref);
@@ -71,7 +70,7 @@ export default function register(program) {
               limit: 50,
             });
             for (const rec of res.data.records) {
-              if (rec.value.beacon !== beacon) continue;
+              if (!beacons.includes(rec.value.beacon)) continue;
               const recRef = resolveRef(rec.value, rec.cid);
               if (recRef === ref) {
                 if (!match || (rec.value.createdAt || '') > (match.value.createdAt || '')) {

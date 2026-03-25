@@ -50,6 +50,11 @@ export default function register(program) {
       } else {
         console.log(`${mark} beacon: not set`);
       }
+      if (Array.isArray(projConfig.beacons) && projConfig.beacons.length > 0) {
+        for (const b of projConfig.beacons) {
+          console.log(`${mark} beacon: ${b} (collection)`);
+        }
+      }
 
       const skillPath = join(process.cwd(), '.claude', 'skills', 'using-vit', 'SKILL.md');
       if (existsSync(skillPath)) {

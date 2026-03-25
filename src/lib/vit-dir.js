@@ -44,6 +44,18 @@ export function readLog(filename) {
   }
 }
 
+export function readBeacons() {
+  const config = readProjectConfig();
+  const all = [];
+  if (config.beacon) all.push(config.beacon);
+  if (Array.isArray(config.beacons)) {
+    for (const b of config.beacons) {
+      if (b && !all.includes(b)) all.push(b);
+    }
+  }
+  return all;
+}
+
 export function readFollowing() {
   const p = join(vitDir(), 'following.json');
   if (!existsSync(p)) return [];

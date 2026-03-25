@@ -4,7 +4,7 @@
 import { requireDid } from '../lib/config.js';
 import { CAP_COLLECTION } from '../lib/constants.js';
 import { restoreAgent } from '../lib/oauth.js';
-import { appendLog, readProjectConfig, readFollowing } from '../lib/vit-dir.js';
+import { appendLog, readProjectConfig, readBeacons, readFollowing } from '../lib/vit-dir.js';
 import { requireNotAgent } from '../lib/agent.js';
 import { resolveRef, REF_PATTERN } from '../lib/cap-ref.js';
 import { mark, brand, name } from '../lib/brand.js';
@@ -50,14 +50,13 @@ export default function register(program) {
         if (!did) return;
         if (verbose) console.log(`[verbose] DID: ${did}`);
 
-        const projectConfig = readProjectConfig();
-        const beacon = projectConfig.beacon;
-        if (!beacon) {
+        const beacons = readBeacons();
+        if (beacons.length === 0) {
           console.error(`no beacon set. run '${name} init' in a project directory first.`);
           process.exitCode = 1;
           return;
         }
-        if (verbose) console.log(`[verbose] beacon: ${beacon}`);
+        if (verbose) console.log(`[verbose] beacons: ${beacons.join(', ')}`);
 
         const { agent } = await restoreAgent(did);
         if (verbose) console.log('[verbose] session restored');
@@ -76,7 +75,7 @@ export default function register(program) {
             if (verbose) console.log(`[verbose] ${repoDid}: PDS ${pdsUrl}`);
             const res = await listRecordsFromPds(pdsUrl, repoDid, CAP_COLLECTION, 50);
             for (const rec of res.records) {
-              if (rec.value.beacon !== beacon) continue;
+              if (!beacons.includes(rec.value.beacon)) continue;
               const recRef = resolveRef(rec.value, rec.cid);
               if (recRef === ref) {
                 if (!match || (rec.value.createdAt || '') > (match.value.createdAt || '')) {
