@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 sol pbc
 
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { execFileSync, execSync } from 'node:child_process';
 import { parseGitUrl, toBeacon, beaconToHttps } from '../lib/beacon.js';
@@ -82,7 +82,27 @@ export default function register(program) {
           console.log(`${mark} cloned to ${dirName}/`);
         }
 
-        // 2. install deps
+        // 2. update hack script SELF to point to this fork
+        const hackPath = join(dirPath, 'hack');
+        if (existsSync(hackPath)) {
+          try {
+            const originUrl = execFileSync('git', ['remote', 'get-url', 'origin'], {
+              cwd: dirPath, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'],
+            }).trim();
+            const parsed2 = parseGitUrl(originUrl);
+            const slug = parsed2.org ? `${parsed2.org}/${parsed2.repo}` : parsed2.repo;
+            const hackText = readFileSync(hackPath, 'utf-8');
+            const updated = hackText.replace(/^SELF=".*"$/m, `SELF="${slug}"`);
+            if (updated !== hackText) {
+              writeFileSync(hackPath, updated);
+              if (verbose) console.log(`[verbose] updated hack SELF to "${slug}"`);
+            }
+          } catch (err) {
+            if (verbose) console.log(`[verbose] could not update hack SELF: ${err.message}`);
+          }
+        }
+
+        // 3. install deps
         const bunPath = which('bun');
         const npmPath = which('npm');
         const installer = bunPath || npmPath;
@@ -100,7 +120,7 @@ export default function register(program) {
         });
         console.log(`${mark} deps installed`);
 
-        // 3. link — run the link command from the cloned repo
+        // 4. link — run the link command from the cloned repo
         const vitBin = join(dirPath, 'bin', 'vit.js');
         const runtime = bunPath || 'node';
         if (verbose) console.log(`[verbose] running ${runtime} ${vitBin} link`);
