@@ -4,8 +4,9 @@
 import { loadConfig } from '../lib/config.js';
 import { restoreAgent } from '../lib/oauth.js';
 import { readProjectConfig } from '../lib/vit-dir.js';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, lstatSync, readlinkSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
+import { which } from '../lib/compat.js';
 import { mark, name } from '../lib/brand.js';
 
 export default function register(program) {
@@ -17,6 +18,30 @@ export default function register(program) {
         console.log(`${mark} setup: ok (${when})`);
       } else {
         console.log(`${mark} setup: not done (run ${name} setup)`);
+      }
+
+      // check if vit is running from source
+      const vitPath = which('vit');
+      if (vitPath) {
+        try {
+          const stat = lstatSync(vitPath);
+          if (stat.isSymbolicLink()) {
+            const target = readlinkSync(vitPath);
+            const repoDir = resolve(dirname(vitPath), dirname(target), '..');
+            const isGit = existsSync(join(repoDir, '.git'));
+            if (isGit) {
+              console.log(`${mark} install: source (${repoDir})`);
+            } else {
+              console.log(`${mark} install: linked (${target})`);
+            }
+          } else {
+            console.log(`${mark} install: global (${vitPath})`);
+          }
+        } catch {
+          console.log(`${mark} install: ${vitPath}`);
+        }
+      } else {
+        console.log(`${mark} install: not on PATH`);
       }
 
       const projConfig = readProjectConfig();

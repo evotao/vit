@@ -10,6 +10,7 @@ import { restoreAgent } from '../lib/oauth.js';
 import { appendLog, readProjectConfig, readLog, readFollowing } from '../lib/vit-dir.js';
 import { REF_PATTERN, resolveRef } from '../lib/cap-ref.js';
 import { name } from '../lib/brand.js';
+import { resolvePds, listRecordsFromPds } from '../lib/pds.js';
 
 export default function register(program) {
   program
@@ -66,6 +67,8 @@ export default function register(program) {
           return;
         }
 
+        const beacon = projectConfig.beacon;
+
         let recapUri = null;
         if (opts.recap) {
           if (!REF_PATTERN.test(opts.recap)) {
@@ -104,12 +107,10 @@ export default function register(program) {
           let match = null;
           for (const repoDid of dids) {
             try {
-              const res = await agent.com.atproto.repo.listRecords({
-                repo: repoDid,
-                collection: CAP_COLLECTION,
-                limit: 50,
-              });
-              for (const rec of res.data.records) {
+              const pdsUrl = await resolvePds(repoDid);
+              if (verbose) console.log(`[verbose] ${repoDid}: PDS ${pdsUrl}`);
+              const res = await listRecordsFromPds(pdsUrl, repoDid, CAP_COLLECTION, 50);
+              for (const rec of res.records) {
                 const recRef = resolveRef(rec.value, rec.cid);
                 if (recRef === opts.recap) {
                   if (!match || (rec.value.createdAt || '') > (match.value.createdAt || '')) {
@@ -139,9 +140,10 @@ export default function register(program) {
           description: opts.description,
           ref: opts.ref,
           createdAt: now,
+          beacon,
         };
-        if (projectConfig.beacon) record.beacon = projectConfig.beacon;
         if (opts.recap) record.recap = { uri: recapUri, ref: opts.recap };
+        if (verbose) console.log(`[verbose] Beacon: ${beacon}`);
         const rkey = TID.nextStr();
         if (verbose) console.log(`[verbose] Record built, rkey: ${rkey}`);
         const putArgs = {

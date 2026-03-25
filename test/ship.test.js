@@ -67,4 +67,10 @@ describe('vit ship', () => {
     expect(r.stderr).not.toMatch(/three lowercase words/i);
     expect(r.stderr).not.toMatch(/body is required/i);
   });
+
+  test('errors when no beacon is set', () => {
+    const r = run('ship --title "Hi" --description "desc" --ref "one-two-three" --did "did:plc:abcdefghijklmnopqrstuvwxyz123456"', '/tmp', agentEnv, 'body text');
+    expect(r.exitCode).not.toBe(0);
+    expect(r.stderr).toContain('no beacon set');
+  });
 });
