@@ -11,14 +11,9 @@
 set -e
 
 UPSTREAM="solpbc/vit"
-REPO="${1:-}"
+SELF="evotao/vit"
+REPO="${1:-$SELF}"
 DIR="${2:-vit}"
-
-# if no repo given, detect from the URL this script was fetched from,
-# or fall back to upstream
-if [ -z "$REPO" ]; then
-  REPO="$UPSTREAM"
-fi
 
 echo "vit hack"
 echo ""
